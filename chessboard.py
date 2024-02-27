@@ -6,12 +6,13 @@ from PySide6 import QtCore, QtGui, QtSvg, QtSvgWidgets, QtWidgets
 import vars
 from chesspieces import ChessPieces
 from movemanager import MoveManager
+from gamemanager import GameManager
 
 
 class ChessBoard:
     def __init__(self):
         self.fischer_random = False
-        self.board = chess.Board(chess960=self.fischer_random)
+        self.board =  #chess.Board(chess960=self.fischer_random)
         self.is_board_flipped = False
         self.move_manager = MoveManager(self)
         self.starting_board_position_fen = None
@@ -106,6 +107,20 @@ class ChessBoard:
         returns which player's turn to play
         """
         return "w" if self.board.turn == chess.WHITE else "b"
+
+    def get_pgn(self) -> str:
+        """
+        return's the pgn string of the board
+        """
+        return GameManeger.get_pgn_from_board(self.board)
+
+    def get_uci_list(self) -> str:
+
+        uci_list = []
+        for move in self.board.move_stack:
+            uci_list.append(move.uci())
+            
+        return uci_list
 
     def highlight_legal_moves(self, scene, square_number):
         """
@@ -208,7 +223,7 @@ class ChessBoardEvents:
 
 class DrawChessBoard(QtWidgets.QGraphicsView, ChessBoard):
 
-    def __init__(self):
+    def __init__(self, board):
         super().__init__()
         self.scene = QtWidgets.QGraphicsScene()
         self.setScene(self.scene)
@@ -219,6 +234,7 @@ class DrawChessBoard(QtWidgets.QGraphicsView, ChessBoard):
         self.chess_pieces.load_chess_piece_images()
         self.show_labels = True
         self.events = ChessBoardEvents(self)
+        self.chessboard = board
 
     def draw_squares(self):
         """
@@ -276,10 +292,17 @@ class DrawChessBoard(QtWidgets.QGraphicsView, ChessBoard):
                 label.setDefaultTextColor(QtGui.QColor(label_color))
                 label.setPos(row_label_x, row_label_y)
 
+    def draw_pgn(self):
+        """draw the current games pgn"""
+        pgn = GameManager.get_pgn_from_board(self.chessboard)
+        pgn_label = QtWidgets.QLabel(pgn)
+        self.scene.addWidget(pgn_label)
+
     def draw_chessboard(self):
         if self.fischer_random:
             self.set_chess960_board()
         self.draw_squares()
+        self.draw_pgn()
         if self.show_labels:
             self.draw_labels()
         self.chess_pieces.draw_pieces()
