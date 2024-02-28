@@ -1,6 +1,6 @@
 import chess
 from PySide6 import QtWidgets, QtCore
-import vars
+import config
 import gamemanager
 
 

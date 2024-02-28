@@ -9,7 +9,7 @@
 import chess.pgn
 from chess.pgn import Game
 from PySide6 import QtWidgets, QtCore
-import vars
+import config
 
 class GameManager:
     """manege everything to do with the pgn"""
