@@ -28,7 +28,7 @@ class GameManager:
         # get the pgn string
         return game.accept(GameManager.pgn_exporter)
 
-class PGNLoader(QWidget):
+class PGNLoader(QtWidgets.QWidget):
     def __init__(self, chessboard):
         super().__init__()
         self.chessboard = chessboard

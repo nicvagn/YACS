@@ -6,8 +6,41 @@
 #
 #   You should have received a copy of the GNU General Public License along with YACS. If not, see <https://www.gnu.org/licenses/>. 
 
+from PySide6 import QtWidgets
+
+from PySide6.QtWidgets import *
+
+class DrawPgn(QtWidgets.QDockWidget):
+    def __init__(self):
+        super().__init__()
+        #self.pgn_layout = QtWidgets.Q
 
 
+        # Create a table widget for displaying moves
+        self.move_table = QTableWidget()
+        self.move_table.setColumnCount(2)
+        self.move_table.setRowCount(33)
+        self.move_table.setHorizontalHeaderLabels(["White", "Black"])
+        self.move_table.setColumnWidth(0, 125)
+        self.move_table.setColumnWidth(1, 125)
+        self.move_table.setFixedWidth(300)
+        self.move_table.setFixedHeight(300)
+        self.move_table.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.move_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.move_table.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
+
+        self.exItem = QTableWidgetItem("hello world")
+
+
+        self.move_table.setItem(1,1,self.exItem)
+
+        self.setWidget(self.move_table)
+
+        #self.move_table.itemClicked.connect(self.chessboard.move_navigator.go_to_move)
+    
+
+
+"""
 class PGNLoader(QWidget):
     def __init__(self, chessboard):
         super().__init__()
@@ -61,3 +94,4 @@ class PGNLoader(QWidget):
 
         self.chessboard.move_navigator.update_moves()
         self.chessboard.move_navigator.update_move_table()
+"""
