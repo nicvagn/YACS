@@ -9,12 +9,13 @@
 from PySide6 import QtWidgets
 
 from PySide6.QtWidgets import *
+import chess
+
 
 class DrawPgn(QtWidgets.QDockWidget):
-    def __init__(self):
+    def __init__(self, chessboard):
+        # chessboard should be the chessboard.py instance this pgn is associated with
         super().__init__()
-        #self.pgn_layout = QtWidgets.Q
-
 
         # Create a table widget for displaying moves
         self.move_table = QTableWidget()
@@ -29,15 +30,52 @@ class DrawPgn(QtWidgets.QDockWidget):
         self.move_table.setSelectionMode(QAbstractItemView.NoSelection)
         self.move_table.horizontalHeader().setSectionResizeMode(QHeaderView.Fixed)
 
-        self.exItem = QTableWidgetItem("hello world")
 
+        self.exItem = QTableWidgetItem()
 
         self.move_table.setItem(1,1,self.exItem)
-
+        # set the move table as the widget in this dock
         self.setWidget(self.move_table)
 
+        # the move number we are on
+        self.move_num = 0
+        # because I am bad at math and marginal at itteration
+        self.column_1 = True
+
+        # needed for translation into san
+        self.san_pig = chessboard.get_internal_board()
+
+
         #self.move_table.itemClicked.connect(self.chessboard.move_navigator.go_to_move)
+    def push_move(self, move) -> None:
+        print(move)
+
+        row = self.move_num // 2 
+
+        if self.column_1:
+            column = 0
+        else:
+            column = 1
+        breakpoint()
+        move_widget = QTableWidgetItem(self.san_pig.san(move))
+        
+        self.move_table.setItem(0, column, move_widget) 
+        # set to other column
+        self.column_1 = not self.column_1
+
+
+
+class PGNManager(QtWidgets.QDockWidget):
+    """manages the PGN for a chess game"""
+
+    def __init__(self, board: chess.Board()):
+        self.game = game 
+        pass
+
+
+
     
+
 
 
 """

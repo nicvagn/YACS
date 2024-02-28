@@ -17,14 +17,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         super().__init__()
         self.__version__ = config.VERSION
         self.setWindowTitle(f"YACS - Yet Another Chess Software ({self.__version__})")
-        # hack for pgn 
-        self.pyboard = chess.Board()
         self.chess_board = DrawChessBoard()
 
-        self.pgnDock = DrawPgn()
         self.setCentralWidget(self.chess_board)
-
-        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.pgnDock)
+        # nrv
+        self.pgnWidget = self.
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.pgnWidget)
 
         self.chess_board.draw_chessboard()
         self.chess_board.setFixedSize(

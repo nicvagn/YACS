@@ -7,16 +7,17 @@
 #   You should have received a copy of the GNU General Public License along with YACS. If not, see <https://www.gnu.org/licenses/>. 
 
 import chess.pgn
-from chess.pgn import Game
 from PySide6 import QtWidgets, QtCore
 import config
+import chessboard
+from pgnmanager import PGNManager
 
 class GameManager:
-    """manege everything to do with the pgn"""
+    """manege everything to do with a game"""
 
     pgn_exporter = chess.pgn.StringExporter(headers=False, variations=True, comments=True)
 
-    def create_game_from_board(board) -> Game:
+    def create_game_from_board(board):
         """
         create a game from board
         """
@@ -27,6 +28,18 @@ class GameManager:
         game = GameManager.create_game_from_board(board)
         # get the pgn string
         return game.accept(GameManager.pgn_exporter)
+    
+    def get_pgn_from_game(game):
+        return game.chessboard.get_internal
+
+
+class Game:
+    """a chess game"""
+    def __init__(self):
+        self.chessboard = chessboard.ChessBoard()
+        self.pgn_manager = PGNManager()
+        self.playing_white = None#TODO
+        self.playing_black = None 
 
 class PGNLoader(QtWidgets.QWidget):
     def __init__(self, chessboard):

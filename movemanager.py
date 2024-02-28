@@ -3,6 +3,8 @@ from PySide6 import QtWidgets, QtCore
 import config
 import gamemanager
 
+from pgnmanager import PGNManager
+
 
 class MoveManager:
     def __init__(self, chessboard):
@@ -15,7 +17,11 @@ class MoveManager:
         self.is_kingside_castling = False
         self.is_queenside_castling = False
 
+        # nrv
+        self.pgn_manager = PGNManager(chessboard)
+
     def move_piece(self, target_square):
+        # modified to update pgn on move
         if self.selected_square is not None:
             for move in self.chessboard.board.legal_moves:
                 if (
@@ -34,7 +40,12 @@ class MoveManager:
                         self.is_kingside_castling = True
                     if self.chessboard.board.is_queenside_castling(move):
                         self.is_queenside_castling = True
+
+                    
+                    # nrv
+                    self.pgn_manager.push_move(move)
                     self.chessboard.board.push(move)
+
                     self.is_piece_moved = True
                     break
 

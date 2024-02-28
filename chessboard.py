@@ -8,14 +8,26 @@ from chesspieces import ChessPieces
 from movemanager import MoveManager
 from gamemanager import GameManager
 
+from pgnmanager import PGNManager
+
 
 class ChessBoard:
     def __init__(self):
-        self.fischer_random = True
+        self.fischer_random = False
         self.board = chess.Board(chess960=self.fischer_random)
         self.is_board_flipped = False
         self.move_manager = MoveManager(self)
+        self.pgn_manager = PGNManager(self)  
         self.starting_board_position_fen = None
+
+    # nrv
+    def get_internal_board(self) -> chess.Board:
+        """get the internal python chess board"""
+        return self.board
+    '''
+    def get_pgn_widget(self) -> DrawPgn:
+        return self.pgn_manager
+    '''
 
     def set_chess960_board(self):
         self.board.set_chess960_pos(random.randint(1, 959))
@@ -107,38 +119,7 @@ class ChessBoard:
         return "w" if self.board.turn == chess.WHITE else "b"
 
 
-"""
-    def highlight_legal_moves(self, scene, square_number):
-        ""
-        highlights the legal moves of a selected piece/square
-        ""
-        legal_moves = self.move_manager.get_legal_moves(square_number)
 
-        for target_square in set(move.to_square for move in legal_moves):
-            col, row, x, y = self.get_square_coordinates(target_square)
-
-            # Add a circle in the center of the square
-            circle = scene.addEllipse(
-                x + vars.SQUARE_SIZE / 3,
-                y + vars.SQUARE_SIZE / 3,
-                vars.SQUARE_SIZE / 3,
-                vars.SQUARE_SIZE / 3,
-            )
-            circle.setPen(QtCore.Qt.NoPen)
-            circle.setBrush(QtGui.QColor(vars.THEME_COLORS["highlight_legal_moves"]))
-            circle.setOpacity(0.45)
-
-    def delete_highlighted_legal_moves(self, scene):
-        items = scene.items()
-        for item in items:
-            if isinstance(item, QtWidgets.QGraphicsEllipseItem):
-                brush_color = item.brush().color()
-                if brush_color == QtGui.QColor(
-                    vars.THEME_COLORS["highlight_legal_moves"]
-                ):
-                    scene.removeItem(item)
-
-"""
 class ChessBoardEvents:
     def __init__(self, chessboard):
         self.chessboard = chessboard
@@ -315,17 +296,17 @@ class DrawChessBoard(QtWidgets.QGraphicsView, ChessBoard):
                     label = self.scene.addText(f"{8-row}")
                 label.setDefaultTextColor(QtGui.QColor(label_color))
                 label.setPos(row_label_x, row_label_y)
-    '''
-    def draw_pgn(self):
-        """draw the current games pgn"""
-        pgn = GameManager.get_pgn_from_board(self.chessboard)
-        pgn_label = QtWidgets.QLabel(pgn)
-        self.scene.addWidget(pgn_label)
-    '''
+
+    def draw_pgn(self) -> None:
+        # TODO
+        pass
+        
+        
     def draw_chessboard(self):
         if self.fischer_random:
             self.set_chess960_board()
         self.draw_squares()
+        self.draw_pgn()
         if self.show_labels:
             self.draw_labels()
         self.chess_pieces.draw_pieces()
