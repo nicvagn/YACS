@@ -5,13 +5,13 @@ import gamemanager
 
 
 class MoveManager:
-
     def __init__(self, chessboard):
         self.chessboard = chessboard
         self.selected_square = None
         self.is_piece_moved = False
         self.is_capture = False
         self.is_ep = False
+        self.is_castling = False
         self.is_kingside_castling = False
         self.is_queenside_castling = False
 
@@ -28,6 +28,8 @@ class MoveManager:
                         self.is_capture = True
                     if self.chessboard.board.is_en_passant(move):
                         self.is_ep = True
+                    if self.chessboard.board.is_castling(move):
+                        self.is_castling = True
                     if self.chessboard.board.is_kingside_castling(move):
                         self.is_kingside_castling = True
                     if self.chessboard.board.is_queenside_castling(move):
@@ -58,7 +60,8 @@ class MoveManager:
         pawn_promotion.pawn_promotion_dialog(move)
 
     def get_last_move(self):
-        return self.chessboard.board.peek()
+        if len(self.chessboard.board.move_stack) > 0:
+            return self.chessboard.board.peek()
 
     def get_legal_moves(self, square):
         moves = []
